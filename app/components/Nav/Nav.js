@@ -15,7 +15,7 @@ const NavBar = function() {
 		<nav className="navbar-page">
 			<div className="navbar funky">
 				<Link to="/">React Static Generator 17</Link>
-				<a role="button" tabIndex={0} className="right" onClick={toggleSlide}>Menu</a>
+				<button type="button" className="right" onClick={toggleSlide}>Menu</button>
 
 				<div role="presentation" className="nav-menu" onClick={toggleSlide}>
 					<div className="content">

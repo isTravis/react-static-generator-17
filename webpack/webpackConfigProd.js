@@ -1,15 +1,13 @@
 const { resolve } = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const autoprefixer = require('autoprefixer');
 const staticPaths = require('./staticPaths');
 
-const extractSass = new ExtractTextPlugin({
-	filename: 'main.css',
-	allChunks: true,
-});
 
 module.exports = {
+	mode: 'production',
 	entry: {
 		main: resolve(__dirname, '../app/indexProd.js'),
 	},
@@ -31,13 +29,24 @@ module.exports = {
 			},
 			{
 				test: /\.scss$/,
-				use: extractSass.extract({
-					use: [
-						{ loader: 'css-loader', options: { minimize: true } },
-						{ loader: 'sass-loader' }
-					],
-				})
-			}
+				use: [
+					MiniCssExtractPlugin.loader,
+					{ loader: 'css-loader' },
+					{
+						loader: 'postcss-loader',
+						options: { ident: 'postcss', plugins: [autoprefixer({})] },
+					},
+					{ loader: 'resolve-url-loader' },
+					{
+						loader: 'sass-loader',
+						options: {
+							sassOptions: {
+								includePaths: [resolve(__dirname, '../')],
+							}
+						},
+					},
+				],
+			},
 		],
 	},
 	plugins: [
@@ -46,7 +55,9 @@ module.exports = {
 				NODE_ENV: JSON.stringify('production'),
 			},
 		}),
-		extractSass,
+		new MiniCssExtractPlugin({
+			filename: '[name].css',
+		}),
 		new StaticSiteGeneratorPlugin({
 			paths: staticPaths,
 			globals: {

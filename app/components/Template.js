@@ -1,10 +1,5 @@
-/* ----------------------------- */
-/* Functional Component Template */
-/* ----------------------------- */
-
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 const propTypes = {
 	appData: PropTypes.object.isRequired,
@@ -12,7 +7,7 @@ const propTypes = {
 
 const Template = function({ appData }) {
 	return (
-		<div id={'template-page'}>
+		<div id="template-page">
 			Template
 			{JSON.stringify(appData)}
 		</div>
@@ -20,4 +15,4 @@ const Template = function({ appData }) {
 };
 
 Template.propTypes = propTypes;
-export default connect(state => ({ appData: state.app }))(Template);
+export default Template;
