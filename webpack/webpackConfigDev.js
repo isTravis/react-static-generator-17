@@ -2,8 +2,11 @@ const { resolve } = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const autoprefixer = require('autoprefixer');
 
 module.exports = {
+	mode: 'development',
 	entry: [
 		'webpack-dev-server/client',
 		'webpack/hot/only-dev-server',
@@ -15,7 +18,7 @@ module.exports = {
 		publicPath: '/',
 	},
 	resolve: {
-		modules: [resolve(__dirname, '../app'), 'node_modules']
+		modules: [resolve(__dirname, '../app'), 'node_modules'],
 	},
 	context: resolve(__dirname, '../app'),
 	devtool: '#eval',
@@ -34,7 +37,7 @@ module.exports = {
 			chunks: false,
 			chunkModules: false,
 			modules: false,
-		}
+		},
 	},
 	module: {
 		rules: [
@@ -46,11 +49,28 @@ module.exports = {
 			{
 				test: /\.scss$/,
 				use: [
-					{ loader: 'style-loader' }, // creates style nodes from JS strings
-					{ loader: 'css-loader' }, // translates CSS into CommonJS
-					{ loader: 'sass-loader' } // compiles Sass to CSS
-				]
-			}
+					{
+						loader: MiniCssExtractPlugin.loader,
+						options: { hmr: true },
+					},
+					{ loader: 'css-loader' },
+					{
+						loader: 'postcss-loader',
+						options: { ident: 'postcss', plugins: [autoprefixer({})] },
+					},
+					{ loader: 'resolve-url-loader' },
+					{
+						loader: 'sass-loader',
+						options: {
+							// sourceMap: true,
+							// sourceMapContents: false,
+							sassOptions: {
+								includePaths: [resolve(__dirname, '../')],
+							},
+						},
+					},
+				],
+			},
 		],
 	},
 	plugins: [
@@ -60,9 +80,10 @@ module.exports = {
 			title: 'redux-react-starter',
 			template: '../webpack/template.html',
 		}),
-		new CopyWebpackPlugin([
-			{ from: '../static' }
-		]),
+		new MiniCssExtractPlugin({
+			filename: '[name].css',
+		}),
+		new CopyWebpackPlugin([{ from: '../static' }]),
 	],
 	performance: { hints: false },
 };

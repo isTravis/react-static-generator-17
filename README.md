@@ -1,6 +1,6 @@
 # React Static Generator 17
 
-A projet that uses React for the development and build process, but exports plain static HTML files on build. To be clear, the output HTML does not initialize React. This does not produce a React SPA, but rather a set of plain HTML files to be served statically. 
+A project that uses React for the development and build process, but exports plain static HTML files on build. To be clear, the output HTML does not initialize React. This does not produce a React SPA, but rather a set of plain HTML files to be served statically. 
 
 Auto-deployed from Master to demo at: [https://react-static-generator-17.netlify.com](https://react-static-generator-17.netlify.com)
 
